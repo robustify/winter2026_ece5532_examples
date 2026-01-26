@@ -15,6 +15,9 @@ install(
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# TODO: install launch folder
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+)
 
 ament_auto_package()

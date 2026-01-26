@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+    <group>
+        <push-ros-namespace namespace="namespace_1" />
+        <node pkg="ros_namespace_example" exec="namespace_example" name="instance1" />
+    </group>
+
+    <group>
+        <push-ros-namespace namespace="namespace_2" />
+        <node pkg="ros_namespace_example" exec="namespace_example" name="instance2" />
+    </group>
+
+    <node pkg="ros_namespace_example" exec="namespace_example.py" name="instance3" />
+
+</launch>
