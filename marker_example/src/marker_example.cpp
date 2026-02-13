@@ -67,13 +67,8 @@ namespace marker_example {
         /* Publish marker array message:
          - Create MarkerArray message instance
          - Populate array with constant cube and arrow markers
-         - Update timestamp in each marker's header
          - Publish
         */
-
-        rclcpp::Time current_time = get_clock()->now();
-        cube_marker_.header.stamp = current_time;
-        arrow_marker_.header.stamp = current_time;
 
         visualization_msgs::msg::MarkerArray marker_array_msg;
         marker_array_msg.markers.push_back(cube_marker_);

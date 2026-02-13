@@ -3,6 +3,9 @@ import numpy as np
 import sys
 import rclpy
 from rclpy.node import Node
+from sensor_msgs.msg import NavSatFix
+from nav_msgs.msg import Path
+from geometry_msgs.msg import PoseStamped
 
 
 class Enu:
@@ -42,16 +45,30 @@ class GpsExample(Node):
             rclpy.shutdown()
             sys.exit(0)
 
-        # TODO: Subscribe to GPS position and advertise an ENU path
+        # Subscribe to GPS position and advertise an ENU path
+        self.sub_fix = self.create_subscription(msg_type=NavSatFix, topic='fix', qos_profile=1, callback=self.recv_fix)
+        self.pub_path = self.create_publisher(msg_type=Path, topic='path', qos_profile=1)
+        self.gps_path_msg = Path()
+        self.gps_path_msg.header.frame_id = 'world'
 
-        # TODO: Calculate ECEF position and ECEF -> ENU rotation matrix at the reference coordinates
+        # Calculate ECEF position and ECEF -> ENU rotation matrix at the reference coordinates
+        self.ref_ecef = Enu.llh_to_ecef(ref_lat, ref_lon, ref_alt)
+        self.enu_rot_mat = Enu.llh_to_rot_mat(ref_lat, ref_lon)
 
     def recv_fix(self, msg):
-        pass
+        # Convert incoming latitude/longitude/altitude data into ENU
+        current_ecef = Enu.llh_to_ecef(msg.latitude, msg.longitude, msg.altitude)
+        current_enu = self.enu_rot_mat @ (current_ecef - self.ref_ecef)
 
-        # TODO: Convert incoming latitude/longitude/altitude data into ENU
+        # Append position to the end of the path message and then publish it out
+        new_path_point = PoseStamped()
+        new_path_point.pose.position.x = current_enu[0]
+        new_path_point.pose.position.y = current_enu[1]
+        new_path_point.pose.position.z = current_enu[2]
 
-        # TODO: Append position to the end of the path message and then publish it out
+        self.gps_path_msg.poses.append(new_path_point)
+        self.gps_path_msg.header.stamp = self.get_clock().now().to_msg()
+        self.pub_path.publish(self.gps_path_msg)
 
 
 if __name__ == '__main__':
