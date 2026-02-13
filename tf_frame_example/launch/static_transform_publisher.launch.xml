@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="tf2_ros" exec="static_transform_publisher" name="frame1_to_frame2"
+        args="--frame-id frame1 --child-frame-id frame2 --x 0 --y 2 --z 0 --roll 0 --pitch 0 --yaw 0" />
+
+    <node pkg="tf2_ros" exec="static_transform_publisher" name="frame2_to_frame3"
+        args="--frame-id frame2 --child-frame-id frame3 --x 4 --y 0 --z 0 --roll 0 --pitch 0 --yaw 0.5" />
+
+    <node pkg="rviz2" exec="rviz2" name="rviz_example" args="-d $(find-pkg-share tf_frame_example)/rviz/rviz_config.rviz" />
+
+</launch>

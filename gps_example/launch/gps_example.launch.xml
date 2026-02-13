@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<launch>
+
+    <arg name="python" default="false" />
+    <arg name="ref_lat" default="45.0" />
+    <arg name="ref_lon" default="-81.0" />
+    <arg name="ref_alt" default="0.0" />
+
+    <node unless="$(var python)" pkg="gps_example" exec="gps_example" name="gps_example" output="screen">
+        <param name="ref_lat" value="$(var ref_lat)" />
+        <param name="ref_lon" value="$(var ref_lon)" />
+        <param name="ref_alt" value="$(var ref_alt)" />
+        <remap from="fix" to="audibot/fix" />
+    </node>
+    <node if    ="$(var python)" pkg="gps_example" exec="gps_example.py" name="gps_example" output="screen">
+        <param name="ref_lat" value="$(var ref_lat)" />
+        <param name="ref_lon" value="$(var ref_lon)" />
+        <param name="ref_alt" value="$(var ref_alt)" />
+        <remap from="fix" to="audibot/fix" />
+    </node>
+
+    <node pkg="rqt_publisher" exec="rqt_publisher" name="rqt_publisher" />
+
+    <node pkg="rviz2" exec="rviz2" name="gps_example_viz" args="-d $(find-pkg-share gps_example)/rviz/gps_example.rviz" />
+
+    <!-- This starts the Gazebo simulation -->
+    <include file="$(find-pkg-share audibot_gazebo)/launch/gazebo_bringup.launch.py">
+        <arg name="robot_sdf_file" value="$(find-pkg-share audibot_description)/models/orange_audibot/model.sdf" />
+        <arg name="world_sdf_file" value="$(find-pkg-share audibot_gazebo)/worlds/orange_empty_world.sdf" />
+        <arg name="gz_bridge_file" value="$(find-pkg-share audibot_gazebo)/config/ros_gz_bridge.yaml" />
+        <arg name="verbose" value="false" />
+    </include>
+</launch>
