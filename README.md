@@ -11,7 +11,7 @@ There are three viable options to get a computer set up properly for the course.
 
 To install Docker and build a development image for the course, follow these instructions:
 
-https://github.com/robustify/ece5532_ros2_docker
+https://github.com/mradov-ou/ece5532_ros2_docker
 
 and disregard the instructions below.
 
@@ -43,7 +43,7 @@ chmod +x ece5532_software_setup.bash
 ```
 This script automatically clones the following repositories that support the simulations used in the course:
 
-- `ece5532_gazebo` (https://github.com/robustify/ece5532_gazebo.git)
+- `ece5532_gazebo` (https://github.com/mradov-ou/ece5532_gazebo.git)
 - `audibot` (https://github.com/robustify/audibot.git)
 
 In case you need to recreate the ROS workspace manually, clone these two repositories in addition to this one. Make sure to check out the the `gz_harmonic` branch of the Audibot repository.
